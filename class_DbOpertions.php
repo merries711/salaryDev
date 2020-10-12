@@ -19,7 +19,7 @@
 		  }  
 	   }
 
-	   function dbSelectArray($tab_name,$data_input) {
+	   function dbSelectArray($tab_name,$tsql) {
 		   //---计算插入表的列数---
 		  $tsql = "select name from syscolumns where id=OBJECT_ID('$tab_name') order by colorder";
 		  $stmt = $this->conn->prepare($tsql,array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));  
