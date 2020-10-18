@@ -1,9 +1,9 @@
 <?php
     class DbOpertions {  
-	   private $server_ip = '192.168.1.37';
-	   private $database = 'MyStock';
+	   private $server_ip = '9.240.0.199';
+	   private $database = 'DLSalary';
 	   private $uid = 'sa';
-	   private $pwd = '123';
+	   private $pwd = 'GpicIn1220';
 	   private $conn;
 	   private $rows;
 
@@ -19,30 +19,20 @@
 		  }  
 	   }
 
-	   function dbSelectArray($tab_name,$tsql) {
-		   //---计算插入表的列数---
+	   function dbSelectArray($tsql) {
+		  $stmt = $this->conn->prepare($tsql,array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));  
+          $stmt->execute();  
+		  return $stmt->fetchall(PDO::FETCH_ASSOC);  
+       }
+
+      function dbGetHeader($tab_name) {
 		  $tsql = "select name from syscolumns where id=OBJECT_ID('$tab_name') order by colorder";
 		  $stmt = $this->conn->prepare($tsql,array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));  
-		  $stmt->execute();  
-		  $row_count = $stmt->rowCount();  
-		  //---生成占位符---
-		  $bit="?";
-		  for ($i = 1; $i <= $row_count-1; $i++) {
-			 $bit .= ", ?";
-		  }
-		  //---执行插入操作--- 
-		  $tsql = "insert into $tab_name values ($bit)";
-		  $stmt = $this->conn->prepare($tsql,array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL)); 
-		  $input_time = date("Y-m-d H:i:s");
-          $inserted_rows = 0;
-		  foreach ( $data_input as $v ) {
-			 $v[] = $input_time;
-			 $stmt->execute($v);
+          $stmt->execute();  
+          foreach (  $stmt->fetchall(PDO::FETCH_ASSOC) as $v ) {
+              $tabColumn[] = $v['name'];
           }
-		  //---统计本次插入的行数---
-          $tsql = "select count(*) from $tab_name where dataCreateDate = '$input_time'";
-          $stmt = $this->conn->query($tsql);  
-          printf("本次 %1s 表操作共插入 %2d 条数据\n", $tab_name , $stmt->fetchColumn(0));
+		  return $tabColumn;  
        }
 
 	   function dbInsert($tab_name,$data_input) {
