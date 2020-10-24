@@ -25,6 +25,13 @@
 		  return $stmt->fetchall(PDO::FETCH_ASSOC);  
        }
 
+	   function dbDoSql($tsql) {
+		  $stmt = $this->conn->prepare($tsql,array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));  
+          //echo $tsql.PHP_EOL;
+          $stmt->execute();  
+		  printf("本次操作影响 %1d 条数据\n", $stmt->rowCount());
+       }
+
       function dbGetHeader($tab_name) {
 		  $tsql = "select name from syscolumns where id=OBJECT_ID('$tab_name') order by colorder";
 		  $stmt = $this->conn->prepare($tsql,array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));  
@@ -35,7 +42,7 @@
 		  return $tabColumn;  
        }
 
-	   function dbInsert($tab_name,$data_input) {
+	   function dbInsert($tab_name,$data_input,$time_insert) {
 		   //---计算插入表的列数---
 		  $tsql = "select name from syscolumns where id=OBJECT_ID('$tab_name') order by colorder";
 		  $stmt = $this->conn->prepare($tsql,array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));  
@@ -49,18 +56,14 @@
 		  //---执行插入操作--- 
 		  $tsql = "insert into $tab_name values ($bit)";
 		  $stmt = $this->conn->prepare($tsql,array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL)); 
-		  $input_time = date("Y-m-d H:i:s");
-          $inserted_rows = 0;
 		  foreach ( $data_input as $v ) {
-			 $v[] = $input_time;
 			 $stmt->execute($v);
           }
 		  //---统计本次插入的行数---
-          $tsql = "select count(*) from $tab_name where dataCreateDate = '$input_time'";
+          $tsql = "select count(*) from $tab_name where dataCreateDate = '$time_insert'";
           $stmt = $this->conn->query($tsql);  
           printf("本次 %1s 表操作共插入 %2d 条数据\n", $tab_name , $stmt->fetchColumn(0));
        }
-
 
 	   function dbDelete($tab_name) {
 		  //---执行删除操作--- 
