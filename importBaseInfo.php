@@ -10,14 +10,14 @@
     require '../vendor/autoload.php';
 	include_once "./class_DbOpertions.php";
     include_once "./class_MyExcel.php";
-    include_once "./doSQL_import.php";
+    include_once "./doSQL_import_BaseInfo.php";
 
     use PhpOffice\PhpSpreadsheet\Spreadsheet;
     use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 
     //---变量初始化---
-    //$fileMonth = date("Y-m");
-    $fileMonth = '2020-09';
+    $fileMonth = date("Y-m");
+    //$fileMonth = '2020-09';
     $inputFile = './_ExcelFiles/'.$fileMonth.'/00模板_新增人员信息.xlsx';
     $reader = new Xlsx();
     $spreadsheet = $reader->load($inputFile);
@@ -49,12 +49,12 @@
 
     //---导入数据库---
     $dbOper = new DbOpertions();
-    //$dbOper->dbInsert('Add_New_Person',$importData,$insertTime);
+    $dbOper->dbInsert('Add_New_Person',$importData,$insertTime);
 
     //---导入后数据库相关操作---
-    //$dbOper->dbDoSql($import_Base_Info_SQL_01);
-    //$dbOper->dbDoSql($import_Base_Info_SQL_02);
-    //$dbOper->dbDoSql($import_Base_Info_SQL_03);
+    $dbOper->dbDoSql($import_Base_Info_SQL_01);
+    $dbOper->dbDoSql($import_Base_Info_SQL_02);
+    $dbOper->dbDoSql($import_Base_Info_SQL_03);
     $dbOper->dbDoSql($import_Base_Info_SQL_05);
 
 ?>

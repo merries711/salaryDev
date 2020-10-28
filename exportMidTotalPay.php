@@ -20,29 +20,45 @@
     $dbOper->dbDoSql($SQL_create_View_RSLT_totalPay);
     $tabHeader = $dbOper->dbGetHeader($viewName);
     
-    $whereCondition[] = array("劳动[销售]","WHERE contractType='劳动合同' AND postType='销售'");
-    $whereCondition[] = array("劳动[非销]","WHERE contractType='劳动合同' AND postType='非销'");
+    $whereCondition[] = array("劳动（销售）","WHERE contractType='劳动合同' AND postType='销售'");
+    $whereCondition[] = array("劳动（非销）","WHERE contractType='劳动合同' AND postType='非销'");
+    $whereCondition[] = array("光彩（销售）","WHERE contractType='派遣合同' and dispatchCompany='光彩' and postType='销售'");
+    $whereCondition[] = array("光彩（非销）","WHERE contractType='派遣合同' and dispatchCompany='光彩' and postType='非销'");
+    $whereCondition[] = array("融通（销售）","WHERE contractType='派遣合同' and dispatchCompany like '融%' and postType='销售'");
+    $whereCondition[] = array("融通（非销）","WHERE contractType='派遣合同' and dispatchCompany like '融%' and postType='非销'");
+
+    $spreadsheet = new Spreadsheet();
+
+    foreach ( $whereCondition as $v ) {
+        $doSQL =  $SQL_RSLT_totalPay_export.PHP_EOL.'  '.$v[1];
+        $exportData = $dbOper->dbSelectArray($doSQL);
+        //echo $doSQL.PHP_EOL;
+        //print_r($exportData); 
+
+       $infoIndex = 0;
+
+       $spreadsheet->createSheet($infoIndex)->setTitle($v[0]);
+       $spreadsheet->setActiveSheetIndex($infoIndex);
+
+       $spreadsheet->getActiveSheet($infoIndex)->getStyle('A:J')
+                              ->getNumberFormat()
+                               ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_TEXT);
+
+        $spreadsheet->getActiveSheet($infoIndex)->getStyle('K:AK')
+                              ->getNumberFormat()
+                              ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_00);
     
-    $doSQL =  $SQL_RSLT_totalPay_export.PHP_EOL.'  '.$whereCondition[0][1];
-    $exportData = $dbOper->dbSelectArray($doSQL);
-    echo $doSQL.PHP_EOL;
+        $spreadsheet->getActiveSheet($infoIndex)->fromArray($tabHeader);
+        $spreadsheet->getActiveSheet($infoIndex)->fromArray($exportData,null,'A2');
 
-    print_r($exportData);
+        ++$infoIndex;
 
-//    $spreadsheet = new Spreadsheet();
-//
-//    $spreadsheet->getActiveSheet()->getStyle('A:J')
-//                          ->getNumberFormat()
-//                          ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_TEXT);
-//
-//    $spreadsheet->getActiveSheet()->getStyle('K:AJ')
-//                          ->getNumberFormat()
-//                          ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_00);
-//    
-//    $spreadsheet->getActiveSheet()->fromArray($tabHeader);
-//    $spreadsheet->getActiveSheet()->fromArray($inputData,null,'A2');
-//
-//   $writer = new Xlsx($spreadsheet);
-//   $writer->save('hello_world.xlsx');
+    }
+
+    $outFileName =   'OUT_'.date("Y").date("m").'_工资表.xlsx';
+    $outDir = './_ExcelFiles/'.date("Y-m").'/';
+
+    $writer = new Xlsx($spreadsheet); 
+    $writer->save($outDir.$outFileName);
 
 ?>

@@ -1,7 +1,7 @@
 <?php
 
-//$payMonth = date("Y-m");
-$payMonth = '2020-09';
+$payMonth = date("Y-m");
+//$payMonth = '2020-09';
 
 $SQL_import_Payable_01 = <<<EOT
     INSERT INTO Import_Payable 

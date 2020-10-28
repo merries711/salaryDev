@@ -1,9 +1,9 @@
 <?php
 
-//$payMonth = date("Y-m");
-//$viewName = 'View_RSLT_totalPay_'.date("Y").date("m");
-$payMonth = '2020-09';
-$viewName = 'View_RSLT_totalPay_'.'202009';
+$payMonth = date("Y-m");
+$viewName = 'View_RSLT_totalPay_'.date("Y").date("m");
+//$payMonth = '2020-09';
+//$viewName = 'View_RSLT_totalPay_'.'202009';
 
 $SQL_isnull_View_RSLT_totalPay = <<<EOT
     IF object_id('$viewName') is not null
@@ -71,6 +71,7 @@ $SQL_RSLT_totalPay_export = <<<EOT
       ,[clockDeduction]
       ,[otherDeduction]
       ,[otherSubsidies]
+      ,[lunchSubsidies]
       ,[heatingSubsidies]
       ,[childSubsidies]
       ,[festivalBonus]

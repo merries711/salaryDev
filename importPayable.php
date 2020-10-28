@@ -16,11 +16,11 @@
     use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
     use PhpOffice\PhpSpreadsheet\Reader\Xls;
 
-    //$fileMonth = date("Y-m");
-    $fileMonth = '2020-09';
-    $inputFiles[] = './_ExcelFiles/'.$fileMonth.'/模板_IN_应发明细_v9_非销.xlsx';
-    $inputFiles[] = './_ExcelFiles/'.$fileMonth.'/模板_IN_应发明细_v9_销售_互动.xlsx';
-    $inputFiles[] = './_ExcelFiles/'.$fileMonth.'/模板_IN_应发明细_v9_销售_自主.xlsx';
+    $fileMonth = date("Y-m");
+    //$fileMonth = '2020-09';
+    //$inputFiles[] = './_ExcelFiles/'.$fileMonth.'/模板_IN_应发明细_v10_非销.xlsx';
+    //$inputFiles[] = './_ExcelFiles/'.$fileMonth.'/模板_IN_应发明细_v10_销售_互动.xlsx';
+    $inputFiles[] = './_ExcelFiles/'.$fileMonth.'/模板_IN_应发明细_v10_销售_自主.xlsx';
 
     $importData = array();
     $insertTime = date("Y-m-d H:i:s");
@@ -47,7 +47,8 @@
         
         $startCol = 'A' ;
         $startRow = '3' ;
-        $endCol = $sheetInfo[0]['lastColumnLetter'] ;
+        //$endCol = $sheetInfo[0]['lastColumnLetter'] ;
+        $endCol = 'AI' ;
         $endRow = $sheetInfo[0]['totalRows'] ;
         $cellRange = $startCol . $startRow . ':' . $endCol . $endRow ;
 
