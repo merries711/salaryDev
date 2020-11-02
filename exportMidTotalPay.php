@@ -19,9 +19,10 @@
     $dbOper->dbDoSql($SQL_isnull_View_RSLT_totalPay);
     $dbOper->dbDoSql($SQL_create_View_RSLT_totalPay);
     $tabHeader = $dbOper->dbGetHeader($viewName);
-    
+
+    $whereCondition[] = array("总经理室","WHERE branch = '大连市分公司总经理室'");
+    $whereCondition[] = array("劳动（非销）","WHERE contractType='劳动合同' AND postType='非销' AND branch != '大连市分公司总经理室'");
     $whereCondition[] = array("劳动（销售）","WHERE contractType='劳动合同' AND postType='销售'");
-    $whereCondition[] = array("劳动（非销）","WHERE contractType='劳动合同' AND postType='非销'");
     $whereCondition[] = array("光彩（销售）","WHERE contractType='派遣合同' and dispatchCompany='光彩' and postType='销售'");
     $whereCondition[] = array("光彩（非销）","WHERE contractType='派遣合同' and dispatchCompany='光彩' and postType='非销'");
     $whereCondition[] = array("融通（销售）","WHERE contractType='派遣合同' and dispatchCompany like '融%' and postType='销售'");

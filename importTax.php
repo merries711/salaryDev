@@ -10,14 +10,14 @@
     require '../vendor/autoload.php';
 	include_once "./class_DbOpertions.php";
     include_once "./class_MyExcel.php";
-    include_once "./doSQL.php";
+   // include_once "./doSQL.php";
 
     use PhpOffice\PhpSpreadsheet\Spreadsheet;
     use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
     use PhpOffice\PhpSpreadsheet\Reader\Xls;
 
     $fileMonth = date("Y-m");
-    $inputFile = './_ExcelFiles/'.$fileMonth.'/全员202009_税款计算_工资薪金所得.xls';
+    $inputFile = './_ExcelFiles/'.$fileMonth.'/全员导出202010_税款计算_工资薪金所得.xls';
     $reader = new Xls();
     $spreadsheet = $reader->load($inputFile);
     
@@ -36,6 +36,8 @@
             False,        // Should values be formatted (the equivalent of getFormattedValue() for each cell)
             TRUE         // Should the array be indexed by cell row and cell column
     );
+
+    print_r($sheetDataArray);
 
     $insertTime = date("Y-m-d H:i:s");
     foreach ( $sheetDataArray as $v ) {
