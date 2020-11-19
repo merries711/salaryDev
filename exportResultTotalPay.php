@@ -6,19 +6,31 @@
 	$starttime=date('Y-m-d H:i:s');
 	echo "Start time is $starttime".PHP_EOL;
 	echo "================================================".PHP_EOL;
+
+    $cmd_options = getopt("",array("month:"));
+    if (empty($cmd_options)) {   
+          echo "请输入参数，格式为：--month YYYYMM".PHP_EOL;
+          exit; 
+    } elseif (count($cmd_options,COUNT_RECURSIVE) > 1 ) {
+          echo "参数数量大于1，请重新输入".PHP_EOL;
+          exit; 
+    } elseif ( !ctype_digit($cmd_options['month']) || strlen($cmd_options['month'])!=6 || substr($cmd_options['month'],0,2)!='20' ) {
+          echo "参数格式错误，格式为：--month YYYYMM".PHP_EOL;
+          exit; 
+    }
+    $pay_month = $cmd_options['month'];
 	
     require '../vendor/autoload.php';
 	include_once "./class_DbOpertions.php";
-    include_once "./class_MyExcel.php";
-    include_once "./doSQL_export.php";
+    include_once "./SqlFiles/doSQL_export_ResultTotalPay.php";
 
     use PhpOffice\PhpSpreadsheet\Spreadsheet;
     use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
     $dbOper = new DbOpertions();
-    $dbOper->dbDoSql($SQL_isnull_View_RSLT_totalPay);
-    $dbOper->dbDoSql($SQL_create_View_RSLT_totalPay);
-    $tabHeader = $dbOper->dbGetHeader($viewName);
+    $dbOper->dbDoSql($sql_isnull_View_Result_TotalPay);
+    $dbOper->dbDoSql($sql_create_View_Result_TotalPay);
+    $tabHeader = $dbOper->dbGetHeader($View_Result_TotalPay);
 
     $whereCondition[] = array("总经理室","WHERE branch = '大连市分公司总经理室'");
     $whereCondition[] = array("劳动（非销）","WHERE contractType='劳动合同' AND postType='非销' AND branch != '大连市分公司总经理室'");
@@ -31,7 +43,7 @@
     $spreadsheet = new Spreadsheet();
 
     foreach ( $whereCondition as $v ) {
-        $doSQL =  $SQL_RSLT_totalPay_export.PHP_EOL.'  '.$v[1];
+        $doSQL =  $sql_export_View_Result_TotalPay.PHP_EOL.'  '.$v[1];
         $exportData = $dbOper->dbSelectArray($doSQL);
         //echo $doSQL.PHP_EOL;
         //print_r($exportData); 
@@ -56,8 +68,8 @@
 
     }
 
-    $outFileName =   'OUT_'.date("Y").date("m").'_工资表.xlsx';
-    $outDir = './_ExcelFiles/'.date("Y-m").'/';
+    $outFileName =   'OUT_'.$pay_month.'_工资表.xlsx';
+    $outDir = './ExcelFiles/'.$pay_month.'/';
 
     $writer = new Xlsx($spreadsheet); 
     $writer->save($outDir.$outFileName);

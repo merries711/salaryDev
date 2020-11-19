@@ -1,17 +1,15 @@
 <?php
 
-$payMonth = date("Y-m");
-$viewName = 'View_RSLT_totalPay_'.date("Y").date("m");
-//$payMonth = '2020-09';
-//$viewName = 'View_RSLT_totalPay_'.'202009';
+$db_payMonth = substr($pay_month,0,4).'-'.substr($pay_month,4,2);
+$View_Result_TotalPay = 'View_Result_TotalPay_'.$pay_month;
 
-$SQL_isnull_View_RSLT_totalPay = <<<EOT
-    IF object_id('$viewName') is not null
-       DROP VIEW $viewName
+$sql_isnull_View_Result_TotalPay = <<<EOT
+    IF object_id('$View_Result_TotalPay') is not null
+       DROP VIEW $View_Result_TotalPay
 EOT;
 
-$SQL_create_View_RSLT_totalPay = <<<EOT
-    CREATE VIEW [dbo].$viewName
+$sql_create_View_Result_TotalPay = <<<EOT
+    CREATE VIEW [dbo].$View_Result_TotalPay
     AS
     SELECT x.*
       --实发数
@@ -43,14 +41,14 @@ $SQL_create_View_RSLT_totalPay = <<<EOT
                                               left join Base_Housing_Fund t4 on t1.sapno=t4.sapno 
 									          left join Base_Enterprise_Annuity t5 on t1.sapno=t5.sapno 
 									          left join  (select taxMonth,sapno,sum(totalTaxReal) as totalTaxReal from  Import_Tax group by taxMonth,sapno) t6 on t1.sapno=t6.sapno and t1.payMonth=t6.taxMonth
-    Where t1.payMonth='$payMonth'
+    Where t1.payMonth='$db_payMonth'
     ) x , Import_Payable y
     WHERE x.payMonth=y.payMonth
     AND x.sapno=y.sapno
     AND x.idno=y.idno 
 EOT;
 
-$SQL_RSLT_totalPay_export = <<<EOT
+$sql_export_View_Result_TotalPay = <<<EOT
   SELECT [payMonth]
       ,' ' + [bankCard] as bankCard
       ,[sapno]
@@ -89,7 +87,7 @@ $SQL_RSLT_totalPay_export = <<<EOT
       ,[totalTaxReal]
       ,[totalRealPay]
       ,[remarks]
-  FROM [DLSalary].[dbo].$viewName
+  FROM [DLSalary].[dbo].$View_Result_TotalPay
 EOT;
 
 
