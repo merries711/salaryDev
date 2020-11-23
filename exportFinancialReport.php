@@ -34,10 +34,7 @@
 
     $spreadsheet = new Spreadsheet();
 
-    //$doSQL =  $SQL_RSLT_totalPay_export.PHP_EOL.'  '.$v[1];
     $exportData = $dbOper->dbSelectArray("select * from $View_Financial_Report");
-    //echo $doSQL.PHP_EOL;
-    //print_r($exportData); 
 
    $spreadsheet->getActiveSheet()->getStyle('A:G')
                           ->getNumberFormat()

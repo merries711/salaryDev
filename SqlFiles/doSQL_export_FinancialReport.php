@@ -46,7 +46,7 @@ $sql_create_View_Financial_Report = <<<EOT
           ,cast(0 as decimal(18,2)) as '失业保险个人缴费' 
           ,cast(0 as decimal(18,2)) as '社会保险个人缴费合计'
           ,cast(0 as decimal(18,2)) as '住房公积金个人缴费'
-          ------其他费用------
+          ------其他费用（个人）------
           ,cast(0 as decimal(18,2)) as '免税额度1' 
           ,cast(0 as decimal(18,2)) as '免税额度2'
           ,cast(0 as decimal(18,2)) as '企业年金个人缴费额中需缴税部分' 
@@ -125,7 +125,7 @@ $sql_create_View_Financial_Report = <<<EOT
           ,a.unemploymentPerson as '失业保险个人缴费' 
           ,cast(0 as decimal(18,2)) as '社会保险个人缴费合计'
           ,a.HousingFund as '住房公积金个人缴费'
-          ------其他费用------
+          ------其他费用（个人）------
           ,cast(0 as decimal(18,2)) as '免税额度1' 
           ,cast(0 as decimal(18,2)) as '免税额度2'
           ,cast(0 as decimal(18,2)) as '企业年金个人缴费额中需缴税部分' 
@@ -204,7 +204,7 @@ $sql_create_View_Financial_Report = <<<EOT
           ,cast(0 as decimal(18,2)) as '失业保险个人缴费' 
           ,cast(0 as decimal(18,2)) as '社会保险个人缴费合计'
           ,cast(0 as decimal(18,2)) as '住房公积金个人缴费'
-          ------其他费用------
+          ------其他费用（个人）------
           ,cast(0 as decimal(18,2)) as '免税额度1' 
           ,cast(0 as decimal(18,2)) as '免税额度2'
           ,cast(0 as decimal(18,2)) as '企业年金个人缴费额中需缴税部分' 
@@ -290,7 +290,7 @@ $sql_create_View_Financial_Report = <<<EOT
           ,cast(0 as decimal(18,2)) as '失业保险个人缴费' 
           ,cast(0 as decimal(18,2)) as '社会保险个人缴费合计'
           ,cast(0 as decimal(18,2)) as '住房公积金个人缴费'
-          ------其他费用------
+          ------其他费用（个人）------
           ,cast(0 as decimal(18,2)) as '免税额度1' 
           ,cast(0 as decimal(18,2)) as '免税额度2'
           ,cast(0 as decimal(18,2)) as '企业年金个人缴费额中需缴税部分' 
@@ -317,7 +317,7 @@ $sql_create_View_Financial_Report = <<<EOT
           ,cast(0 as decimal(18,2)) as '职工福利费' 
           ,cast(0 as decimal(18,2)) as '辞退福利费' 
           ,cast(0 as decimal(18,2)) as '股份支付'
-          ,isnull(a.totalPayable,0)-isnull(a.unionDues,0)-isnull(a.afterPayableAdjustment,0)+80
+          ,isnull(a.totalPayable,0)-isnull(a.unionDues,0)-isnull(a.EnterpriseAnnuity,0)-isnull(a.afterPayableAdjustment,0)+80
           +(case when a.payMonth between d.beginMonth and d.endMonth then isnull(d.costCompany*f.fundMonthCount,0) else 0 end)
           +(case when a.payMonth between c.beginMonth and c.endMonth then isnull(c.endowmentComp*f.socialMonthCount,0) else 0 end)
           +(case when a.payMonth between c.beginMonth and c.endMonth then isnull(c.medicalComp*f.socialMonthCount,0) else 0 end)
