@@ -28,7 +28,7 @@
     use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
     use PhpOffice\PhpSpreadsheet\Reader\Xls;
 
-    $inputFile = './ExcelFiles/'.$pay_month.'/全员导出202010_税款计算_工资薪金所得.xls';
+    $inputFile = './ExcelFiles/'.$pay_month.'/导出202011_税款计算_工资薪金所得.xls';
     $reader = new Xls();
     $spreadsheet = $reader->load($inputFile);
     
@@ -48,27 +48,25 @@
             TRUE         // Should the array be indexed by cell row and cell column
     );
 
-    //print_r($sheetDataArray);
-
     $importData = array();
     $insertTime = date("Y-m-d H:i:s");
     foreach ( $sheetDataArray as $v ) {
-        if ( $v['C'] == null ) {
-            $v['C'] = $sheetDataArray[$startRow]['C'];
-            $v['E'] = $sheetDataArray[$startRow]['E'];
-            $v['F'] = $sheetDataArray[$startRow]['F'];
-            $v['G'] = $sheetDataArray[$startRow]['G'];
+        if ( $v['C'] == null || $v['E'] == null || $v['F'] == null || $v['G'] == null  ) {
+             $v['C'] = $sheetDataArray[$startRow]['C'];
+             $v['E'] = $sheetDataArray[$startRow]['E'];
+             $v['F'] = $sheetDataArray[$startRow]['F'];
+             $v['G'] = $sheetDataArray[$startRow]['G'];
         }
         $v[] = $insertTime;
         $importData[] = array_values($v);
     }
 
+    //print_r($importData);
+
     $dbOper = new DbOpertions();
 
     $dbOper->dbDelete('Temp_Import_Tax');
     $dbOper->dbInsert('Temp_Import_Tax',$importData,$insertTime);
-
     $dbOper->dbDoSql($SQL_import_Tax_01);
-    $dbOper->dbDoSql($SQL_import_Tax_02);
 
 ?>

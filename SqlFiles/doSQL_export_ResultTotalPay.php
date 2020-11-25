@@ -90,6 +90,4 @@ $sql_export_View_Result_TotalPay = <<<EOT
   FROM [DLSalary].[dbo].$View_Result_TotalPay
 EOT;
 
-
-
 ?>

@@ -40,12 +40,14 @@ insert into Import_Tax ([employee]
       ,[totalTaxPrepay]
       ,[totalTaxReal]
       ,[remarks]
+      ,[dataFromTempTableDate]
       ,[dataCreateDate]
       ,[dataModifyDate])
  select *,GETDATE(),null from Temp_Import_Tax
  go
  update Import_Tax
 	   set sapno=a.sapno,
+             idno=a.idno,
 	         branch=a.branch,
 			 contractType=a.contractType,
 			 postType=a.postType,
@@ -53,27 +55,8 @@ insert into Import_Tax ([employee]
 	         taxMonth=CONVERT(nvarchar(7),taxStartPeriod,120),
 			 dataModifyDate=GETDATE()
 	 from Base_Employees_Info a , Import_Tax b 
-	 where b.idno=a.idno
+	 where Replace(b.idno,' ','')=a.idno
 	 and b.sapno is null
 EOT;
-
-$SQL_import_Tax_02 = <<<EOT
-    UPDATE Import_Payable
-	   SET employee = a.employee
-	         ,sapno = a.sapno
-			 ,employeeType = a.employeeType
-             ,[branch] = a.branch
-             ,[positionTitle] = a.positionTitle
-             ,[contractType] = a.contractType
-             ,[postType] =a.postType
-             ,[dispatchCompany] = a.dispatchCompany
-			 ,dataModifyDate=GETDATE()
-    FROM Base_Employees_Info a , Import_Payable b
-    WHERE 1=1
-    and a.idno=b.idno
-    and a.sapno=b.sapno
-    and b.payMonth='$db_payMonth'
-EOT;
-
 
 ?>

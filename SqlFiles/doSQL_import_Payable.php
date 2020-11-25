@@ -4,8 +4,7 @@ $db_payMonth = substr($pay_month,0,4).'-'.substr($pay_month,4,2);
 
 $SQL_import_Payable_01 = <<<EOT
     INSERT INTO Import_Payable 
-    SELECT *
-    FROM Temp_Import_Payable
+      SELECT * FROM Temp_Import_Payable
 EOT;
 
 $SQL_import_Payable_02 = <<<EOT
@@ -13,11 +12,11 @@ $SQL_import_Payable_02 = <<<EOT
 	   SET employee = a.employee
 	         ,sapno = a.sapno
 			 ,employeeType = a.employeeType
-             ,[branch] = a.branch
-             ,[positionTitle] = a.positionTitle
-             ,[contractType] = a.contractType
-             ,[postType] =a.postType
-             ,[dispatchCompany] = a.dispatchCompany
+             ,branch = a.branch
+             ,positionTitle = a.positionTitle
+             ,contractType = a.contractType
+             ,postType =a.postType
+             ,dispatchCompany = a.dispatchCompany
 			 ,dataModifyDate=GETDATE()
     FROM Base_Employees_Info a , Import_Payable b
     WHERE 1=1
