@@ -6,18 +6,29 @@
 	$starttime=date('Y-m-d H:i:s');
 	echo "Start time is $starttime".PHP_EOL;
 	echo "================================================".PHP_EOL;
+
+    $cmd_options = getopt("",array("month:"));
+    if (empty($cmd_options)) {   
+          echo "请输入参数，格式为：--month YYYYMM".PHP_EOL;
+          exit; 
+    } elseif (count($cmd_options,COUNT_RECURSIVE) > 1 ) {
+          echo "参数数量大于1，请重新输入".PHP_EOL;
+          exit; 
+    } elseif ( !ctype_digit($cmd_options['month']) || strlen($cmd_options['month'])!=6 || substr($cmd_options['month'],0,2)!='20' ) {
+          echo "参数格式错误，格式为：--month YYYYMM".PHP_EOL;
+          exit; 
+    }
+    $pay_month = $cmd_options['month'];
 	
     require '../vendor/autoload.php';
 	include_once "./class_DbOpertions.php";
-    include_once "./class_MyExcel.php";
-   // include_once "./doSQL.php";
+    include_once "./SqlFiles/doSQL_improt_Tax.php";
 
     use PhpOffice\PhpSpreadsheet\Spreadsheet;
     use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
     use PhpOffice\PhpSpreadsheet\Reader\Xls;
 
-    $fileMonth = date("Y-m");
-    $inputFile = './_ExcelFiles/'.$fileMonth.'/全员导出202010_税款计算_工资薪金所得.xls';
+    $inputFile = './ExcelFiles/'.$pay_month.'/全员导出202010_税款计算_工资薪金所得.xls';
     $reader = new Xls();
     $spreadsheet = $reader->load($inputFile);
     
@@ -37,8 +48,9 @@
             TRUE         // Should the array be indexed by cell row and cell column
     );
 
-    print_r($sheetDataArray);
+    //print_r($sheetDataArray);
 
+    $importData = array();
     $insertTime = date("Y-m-d H:i:s");
     foreach ( $sheetDataArray as $v ) {
         if ( $v['C'] == null ) {
@@ -48,13 +60,15 @@
             $v['G'] = $sheetDataArray[$startRow]['G'];
         }
         $v[] = $insertTime;
-        $inputData[] = array_values($v);
+        $importData[] = array_values($v);
     }
 
     $dbOper = new DbOpertions();
+
     $dbOper->dbDelete('Temp_Import_Tax');
-    $dbOper->dbInsert('Temp_Import_Tax',$inputData,$insertTime);
+    $dbOper->dbInsert('Temp_Import_Tax',$importData,$insertTime);
 
-
+    $dbOper->dbDoSql($SQL_import_Tax_01);
+    $dbOper->dbDoSql($SQL_import_Tax_02);
 
 ?>

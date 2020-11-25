@@ -1,7 +1,6 @@
 <?php
 
-$payMonth = date("Y-m");
-//$payMonth = '2020-09';
+$db_payMonth = substr($pay_month,0,4).'-'.substr($pay_month,4,2);
 
 $SQL_import_Payable_01 = <<<EOT
     INSERT INTO Import_Payable 
@@ -24,7 +23,7 @@ $SQL_import_Payable_02 = <<<EOT
     WHERE 1=1
     and a.idno=b.idno
     and a.sapno=b.sapno
-    and b.payMonth='$payMonth'
+    and b.payMonth='$db_payMonth'
 EOT;
 
 
