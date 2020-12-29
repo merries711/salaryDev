@@ -29,8 +29,8 @@
     use PhpOffice\PhpSpreadsheet\Reader\Xls;
 
     $inputFiles = array();
-    $inputFiles[] = './ExcelFiles/'.$pay_month.'/模板_IN_应发明细_v11_非销.xlsx';
-    $inputFiles[] = './ExcelFiles/'.$pay_month.'/模板_IN_应发明细_v11_销售_互动.xlsx';
+    //$inputFiles[] = './ExcelFiles/'.$pay_month.'/模板_IN_应发明细_v11_非销.xlsx';
+    //$inputFiles[] = './ExcelFiles/'.$pay_month.'/模板_IN_应发明细_v11_销售_互动.xlsx';
     $inputFiles[] = './ExcelFiles/'.$pay_month.'/模板_IN_应发明细_v11_销售_自主.xlsx';
 
     $importData = array();
@@ -61,7 +61,9 @@
         //$endCol = $sheetInfo[0]['lastColumnLetter'] ;
         $endCol = 'AI' ;
         $endRow = $sheetInfo[0]['totalRows'] ;
-        $cellRange = $startCol . $startRow . ':' . $endCol . $endRow ;
+        $cellRange = $startCol . $startRow . ':' . $endCol . $endRow;
+
+        echo $cellRange.PHP_EOL;
 
         $sheetDataArray = $spreadsheet->getActiveSheet()
             ->rangeToArray(
@@ -71,6 +73,8 @@
                 False,        // Should values be formatted (the equivalent of getFormattedValue() for each cell)
                 TRUE         // Should the array be indexed by cell row and cell column
         );
+
+        //print_r($sheetDataArray);
 
         foreach ( $sheetDataArray as $v ) {
             $v[] = $insertTime;

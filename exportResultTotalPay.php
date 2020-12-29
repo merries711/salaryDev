@@ -32,8 +32,8 @@
     $dbOper->dbDoSql($sql_create_View_Result_TotalPay);
     $tabHeader = $dbOper->dbGetHeader($View_Result_TotalPay);
 
-    $whereCondition[] = array("总经理室","WHERE branch = '大连市分公司总经理室'");
-    $whereCondition[] = array("劳动（非销）","WHERE contractType='劳动合同' AND postType='非销' AND branch != '大连市分公司总经理室'");
+    $whereCondition[] = array("总经理室","WHERE branch = '大连市分公司总经理室' or employee = '桑洪洋'");
+    $whereCondition[] = array("劳动（非销）","WHERE contractType='劳动合同' AND postType='非销' AND branch != '大连市分公司总经理室' and employee != '桑洪洋'");
     $whereCondition[] = array("劳动（销售）","WHERE contractType='劳动合同' AND postType='销售'");
     $whereCondition[] = array("光彩（销售）","WHERE contractType='派遣合同' and dispatchCompany='光彩' and postType='销售'");
     $whereCondition[] = array("光彩（非销）","WHERE contractType='派遣合同' and dispatchCompany='光彩' and postType='非销'");
